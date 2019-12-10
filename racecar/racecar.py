@@ -18,8 +18,8 @@ car_width = 73
 
 
 def url2img(url):
-    with urllib.requestst.urlopen(url) as response:
-    img = io.BytesIO(response.read())
+    with urllib.request.urlopen(url) as response:
+        img = io.BytesIO(response.read())
     return pygame.image.load(img)
 
 
