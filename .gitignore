@@ -1,2 +1,2 @@
-
-sudoku/__pycache__/papuzzle.cpython-38.pyc
+*.pyc
+*.png
