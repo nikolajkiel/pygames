@@ -4,10 +4,6 @@ Created on Mon Aug 17 13:28:46 2020
 
 @author: nki
 """
-
-
-
-
 from PyQt5 import QtGui, QtCore, QtWidgets
 import cv2
 import sys, glob, os
@@ -15,14 +11,16 @@ from pathlib import Path
 cwd = Path(os.getcwd())
 
 
-ip = 'http://83.91.176.250/mjpg/video.mjpg'
-# cap = cv2.VideoCapture(ip)
+ip =0# 'http://83.91.176.250/mjpg/video.mjpg'
+#cap = cv2.VideoCapture(ip)
 
 
 class DisplayImageWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, ip=ip):
         super().__init__(parent)
         self.ip = 0
+
+#        self.demo = QtCore.
 
         self.button = QtWidgets.QPushButton('Take picture')
         self.button.clicked.connect(self.show_image)
@@ -62,24 +60,25 @@ class DisplayImageWidget(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def show_image(self):
+        #self.cap.release()
+        #self.cap.open(self.ip)
+        [self.cap.read() for _ in range(4)]
         b, self.im    = self.cap.read() # cv2.imread('placeholder4.PNG')
         if b:
             self.image = QtGui.QImage(self.im.data, self.im.shape[1], self.im.shape[0], QtGui.QImage.Format_RGB888).rgbSwapped()
             self.image_frame.setPixmap(QtGui.QPixmap.fromImage(self.image))
         else:
-            print('False', b)
+            print('No Image available')
 
     @QtCore.pyqtSlot()
     def connect_ipcam(self):
         if self.ip != self.entry_ip_cam.text():
             self.ip = self.entry_ip_cam.text()
             if self.ip.isdigit():
-                print('a')
                 self.cap = cv2.VideoCapture(int(self.ip))
             else:
-                print('b')
                 self.cap = cv2.VideoCapture(self.ip)
-            self.cap.release()
+            #self.cap.release()
 
     @QtCore.pyqtSlot()
     def save_picture(self):
