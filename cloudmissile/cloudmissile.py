@@ -28,7 +28,7 @@ SCREEN_HEIGHT = 600
 # Define a player object by extending pygame.sprite.Sprite
 # The surface drawn on the screen is now an attribute of 'player'
 class Player(pygame.sprite.Sprite):
-    def __init__(self, *, points=0):
+    def __init__(self, points=0):
         super().__init__()
         self.surf = pygame.image.load("jet.bmp").convert_alpha()
         #self.surf.set_colorkey((255, 255, 255), RLEACCEL)
@@ -41,9 +41,9 @@ class Player(pygame.sprite.Sprite):
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
-            self.rect.move_ip(0, -5)
+            self.rect.move_ip(0, -7)
         if pressed_keys[K_DOWN]:
-            self.rect.move_ip(0, 5)
+            self.rect.move_ip(0, 7)
         if pressed_keys[K_LEFT]:
             self.rect.move_ip(-5, 0)
         if pressed_keys[K_RIGHT]:
@@ -64,21 +64,21 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
-        self.status_bar()
+        self.status_bar()                
     
     def __repr__(self):
-        return super().__repr__() + f'\nPoints: {self.points!r}'
+        return super().__repr__() + f'\nPoints: {self.points!r}\nCurrent highscore: {self.highscore}'
     
     def status_bar(self, size=(100, 45)):
         img = Image.new("RGBA", size, (0,0,0,0))
         draw = ImageDraw.Draw(img)
         draw.text((10,15), repr(self).split('\n')[1], fill=(0,0,0,255))#, font=ImageFont.truetype("/etc/fonts/fonts.conf"))
-        draw.text((10,25), f'Highscore: 12', fill = (0,0,0,255))
+        draw.text((10,25), f'Highscore: {self.highscore}', fill = (0,0,0,255))
         bts = img.tobytes('raw', 'RGBA')
         self.surf_status = pygame.image.fromstring(bts, img.size, 'RGBA').convert_alpha()
         
     def kill(self):
-        self.highscore #  Touches the highscore property, just to write it if is better than last time
+        print(self) #  Touches the highscore (self.highscore) property, just to write it if is better than last time
         super().kill()
     
     @property
@@ -108,7 +108,7 @@ class Bullet(pygame.sprite.Sprite):
         self.surf = pygame.image.load("bullet.bmp").convert_alpha()
         self.surf = pygame.transform.scale(self.surf, (50, int(50/self.surf.get_size()[0]*self.surf.get_size()[1])))
         self.rect = self.surf.get_rect(center=pos)
-        self.speed = 25
+        self.speed = 15
     
     def update(self):
         self.rect.move_ip(self.speed, 0)
@@ -136,7 +136,7 @@ class Enemy(pygame.sprite.Sprite):
                 random.randint(0, SCREEN_HEIGHT),
             )
         )
-        self.speed = random.randint(5, 13)
+        self.speed = random.randint(3, 8)
 
     # Move the sprite based on speed
     # Remove the sprite when it passes the left edge of the screen
@@ -280,8 +280,9 @@ while running:
     # Update the display
     pygame.display.flip()
     
-    # Ensure program maintains a rate of 30 frames per second
-    clock.tick(30)
+    # Ensure program maintains a rate of x frames per second
+    clock.tick(60)
     
 # Done! Time to quit.
-pygame.quit()
+# pygame.quit()
+

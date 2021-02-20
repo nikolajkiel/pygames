@@ -53,12 +53,12 @@ class Worker(QtCore.QRunnable):
 
     @QtCore.pyqtSlot()
     def run(self):
-
-
-        print(f'thread started')
-        for i in range(2500):
+        print('thread started')
+        i = 0
+        while self.active:#for i in range(n):
+            i+=1
             if not i % 50:
-                print(f'{i}/2500')
+                print(f'{i}/42   worker active: {self.active}')
 
             try:
                 result = self.func()
@@ -76,6 +76,12 @@ class Worker(QtCore.QRunnable):
 
 
 class StopMotion(QtWidgets.QWidget):
+    def closeEvent(self, event):
+        print('closing...')
+        print(dir(self.threadpool))
+        self.worker.active = False
+        super().closeEvent(event)
+
     def __init__(self, parent=None, ip=ip, projectname='test'):
         super().__init__(parent)
         self.ip = 0
@@ -84,6 +90,9 @@ class StopMotion(QtWidgets.QWidget):
         self.filename = f'{self.projectname}_0001000.png'
         self.path = os.path.join(cwd, self.projectname)
         os.makedirs(self.path, exist_ok=True)
+        print(dir(self))
+        #self.closeEvent.connect(self.print_func)
+        #time.sleep(200)
 
 
         # self.demo = QtCore.
@@ -132,7 +141,8 @@ class StopMotion(QtWidgets.QWidget):
 
     def stream(self):
         self.worker = Worker(self.show_image)
-        self.worker.setAutoDelete(True)
+        #self.worker.setAutoDelete(True)
+        self.worker.active = True
         self.threadpool.start(self.worker)
         dir(self.threadpool)
 
