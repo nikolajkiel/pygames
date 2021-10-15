@@ -82,6 +82,7 @@ def generate(bts):
 
 @app.route('/')
 def index():
+    app.logger.info(f'\n\n{os.getcwd()}   logged in successfully\n\n')
     a, b = get_sound('af')
     return Response(generate(b), mimetype="audio/x-wav")
 
@@ -92,6 +93,6 @@ def sproget(word):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5333)
 else:
-    get_sound('år')
+    ss = get_sound('år')
